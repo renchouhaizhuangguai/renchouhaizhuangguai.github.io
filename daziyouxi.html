@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>打字游戏</title>
+    <style>
+        body {
+            margin: 0;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            font-size: 24px;
+            font-family: "微软雅黑";
+            font-weight: bold;
+            text-shadow: 0 0 5px #000;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        .bg {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: url(img/bg.png);
+            background-size: 100% 100%;
+            overflow: hidden;
+            background-position: center center;
+        }
+
+        .startbox {
+            width: 710px;
+            height: 400px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            animation: move 3s linear infinite;
+        }
+
+        .top {
+            width: 710px;
+            height: 250px;
+            background: url(img/logo.png) no-repeat center;
+        }
+
+        .bottom {
+            width: 710px;
+            height: 150px;
+            position:relative;
+        }
+
+        .choose {
+            width: 340px;
+            height: 100px;
+            float: left;
+            margin-top: 50px;
+            margin-right: 30px;
+            cursor: pointer;
+            background: url(img/choose.png) no-repeat center;
+            transition: all 1s;
+        }
+        .paihang{
+            position: absolute;
+            top:15px;
+            left:50px;
+            width: 100px;
+            height:50px;
+            z-index: 4;
+            background: #fec743;
+            text-align: center;
+            line-height: 50px;
+            color:#fff;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor:pointer;
+        }
+        .paihangbox{
+            position: absolute;
+            width: 400px;
+            height:453px;
+            top:0;
+            left:0;
+            right:0;
+            margin:auto;
+            background: url(img/p_03.png);
+            background-size: cover;
+            padding-top:80px;
+            box-sizing:border-box;
+            text-align: center;
+            z-index:200;
+            padding-left: 0;
+            display: none;
+        }
+        .paihangbox h2{
+            color:#fff;
+        }
+
+        .choose:hover {
+            transform: scale(1.1);
+        }
+
+        .start {
+            width: 340px;
+            height: 100px;
+            float: left;
+            margin-top: 50px;
+            cursor: pointer;
+            background: url(img/start.png) no-repeat center;
+            transition: all 1s;
+        }
+
+        .start:hover {
+            transform: scale(1.1);
+        }
+
+        .show {
+            width: 800px;
+            height: 65px;
+            margin: 0 auto;
+            display: none;
+            position: relative;
+            z-index: 1;
+            margin-left: 400px;
+        }
+        .state {
+            width: 195px;
+            height: 65px;
+            background: url(img/scor.png) no-repeat center;
+            float: left;
+        }
+        .scor {
+            width: 195px;
+            height: 65px;
+            background: url(img/scor.png) no-repeat center;
+            float: left;
+            margin-left: 30px;
+        }
+
+        .life {
+            width: 239px;
+            height: 65px;
+            background: url(img/life.png) no-repeat center;
+            float: left;
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .stop {
+            width: 65px;
+            height: 65px;
+            background: url(img/stop.png) no-repeat center;
+            background-size: 100%;
+            float: right;
+        }
+        .guan,.fen{
+            float: left;
+            margin-top: 22px;
+            margin-left: 5px;
+        }
+        .stateinner {
+            width: 100px;
+            height: 30px;
+            margin-left: 75px;
+            margin-top: 25px;
+        }
+        .scorinner {
+            width: 100px;
+            height: 30px;
+            margin-left: 75px;
+            margin-top: 25px;
+        }
+
+        .lifeinner {
+            width: 165px;
+            height: 40px;
+            background: #a8753f;
+            position: absolute;
+            right: 10px;
+            top: 16px;
+            z-index: -1;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #000 inset;
+            background-image: url(img/progress.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            transition: all 1s;
+        }
+
+        .mask, .mask2 {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            z-index: 99;
+        }
+
+        .overbox {
+            width: 484px;
+            height: 419px;
+            background: url(img/over.png) no-repeat center;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .score {
+            width: 100px;
+            height: 40px;
+            margin-left: 250px;
+            margin-top: 150px;
+            line-height: 40px;
+        }
+
+        .maxscore {
+            width: 100px;
+            height: 40px;
+            margin-left: 250px;
+            margin-top: 5px;
+            line-height: 40px;
+        }
+
+        .btns {
+            width: 250px;
+            height: 93px;
+            margin: 0 auto;
+            margin-top: 30px;
+        }
+
+        .restart {
+            width: 93px;
+            height: 93px;
+            background: url(img/restart.png);
+            float: left;
+            cursor: pointer;
+            transition: all 1s;
+        }
+
+        .restart:hover {
+            transform: rotate(360deg);
+        }
+
+        .quit {
+            width: 93px;
+            height: 93px;
+            background: url(img/quit.png);
+            float: right;
+            cursor: pointer;
+            background-size: 100% 100%;
+            transition: all 1s;
+        }
+
+        .quit:hover {
+            transform: translateX(-30px);
+        }
+
+        .stopbox {
+            width: 470px;
+            height: 220px;
+            background: url(img/stopbox.png);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+
+        .continue {
+            width: 93px;
+            height: 93px;
+            background: url(img/continue.png);
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 1s;
+        }
+
+        .continue:hover {
+            transform: scale(1.1);
+        }
+
+        .stop-restart {
+            width: 93px;
+            height: 93px;
+            background: url(img/restart.png);
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 1s;
+        }
+
+        .stop-restart:hover {
+            transform: rotate(360deg);
+        }
+
+        .stop-quit {
+            width: 93px;
+            height: 93px;
+            background: url(img/quit.png);
+            background-size: 100% 100%;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 1s;
+        }
+
+        .stop-quit:hover {
+            transform: translateX(-30px);
+        }
+
+        .difficult {
+            width: 839px;
+            height: 402px;
+            background: url(img/difficult.png) no-repeat;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            display: none;
+        }
+
+        .choosebox {
+            width: 100%;
+            height: 93px;
+            margin-top: 200px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .choosebox div {
+            width: 214px;
+            height: 93px;
+            cursor: pointer;
+            transition: transform .5s;
+        }
+
+        .choosebox div:hover {
+            transform: scale(1.1);
+        }
+
+        .easy {
+            background: url(img/easy.png) no-repeat center;
+        }
+
+        .medium {
+            background: url(img/medium.png) no-repeat center;
+            /*box-shadow: 0 0 5px red;*/
+        }
+
+        .hard {
+            background: url(img/hard.png) no-repeat center;
+        }
+
+        .back {
+            width: 110px;
+            height: 110px;
+            background: url(img/quit.png);
+            margin: 15px auto;
+            cursor: pointer;
+            transition: all 1s;
+        }
+
+        .back:hover {
+            transform: rotate(360deg);
+        }
+
+        .music {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: url(img/music.png) no-repeat center;
+            position: absolute;
+            right: 100px;
+            top: 10px;
+            z-index: 9999;
+            background-color: #FEC743;
+            border: 3px solid #fff;
+            animation: rotate 3s linear infinite;
+            cursor: pointer;
+        }
+        .newdiv{
+            width: 130px;
+            height: 130px;
+            position: absolute;
+            background-position: center center;
+            background-repeat: no-repeat;
+
+        }
+        .paihangbox li{
+            width: 300px;
+            height:50px;
+            margin:0 auto;
+            line-height: 50px;
+            list-style: none;
+            color:#fff;
+            border-bottom: 3px dashed #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="music"></div>
+    <div class="bg">
+        <div class="paihang">排行榜</div>
+        <ul class="paihangbox">
+            <h2>排行榜</h2>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="show">
+            <div class="state">
+                <div class="guan">关卡</div>
+                <div class="stateinner">1</div>
+            </div>
+            <div class="scor">
+                <div class="fen">得分</div>
+                <div class="scorinner">0</div>
+            </div>
+            <div class="life">
+                <div class="lifeinner"></div>
+            </div>
+            <div class="stop"></div>
+        </div>
+        <div class="startbox">
+            <div class="top"></div>
+            <div class="bottom">
+                <div class="choose"></div>
+                <div class="start"></div>
+            </div>
+        </div>
+    </div>
+    <div class="mask">
+        <div class="overbox">
+            <div class="score">0</div>
+            <div class="maxscore">0</div>
+            <div class="btns">
+                <div class="restart"></div>
+                <div class="quit"></div>
+            </div>
+        </div>
+    </div>
+    <div class="mask2">
+        <div class="stopbox">
+            <div class="continue"></div>
+            <div class="stop-restart"></div>
+            <div class="stop-quit"></div>
+        </div>
+    </div>
+    <div class="difficult">
+        <div class="choosebox">
+            <div class="easy"></div>
+            <div class="medium"></div>
+            <div class="hard"></div>
+        </div>
+        <div class="back"></div>
+    </div>
+</body>
+<script src="js/function.js"></script>
+<script>
+    const bg=$(".bg")[0];
+    const start=$(".start")[0];
+    const startbox=$(".startbox")[0];
+    const show=$(".show")[0];
+    const stateinner=$(".stateinner")[0];
+    const scorinner=$(".scorinner")[0];
+    const lifeinner=$(".lifeinner")[0];
+    const mask=$(".mask")[0];
+    const mask2=$(".mask2")[0];
+    const score=$(".score")[0];
+    const maxscore=$(".maxscore")[0];
+    const restart=$(".restart")[0];
+    const quit=$(".quit")[0];
+    const stop=$(".stop")[0];
+    const continuebtn=$(".continue")[0];
+    const stoprestart=$(".stop-restart")[0];
+    const stopquit=$(".stop-quit")[0];
+    const choose=$(".choose")[0];
+    const difficult=$(".difficult")[0];
+    const choosebtn=$(".choosebox div");
+    const paihang=$(".paihang")[0];
+    const paihangbox=$(".paihangbox")[0];
+    const paili=$(".paihangbox li");
+    const back=$(".back")[0];
+    var fanwei=window.innerWidth-130;
+
+    paihang.onclick=function(e){
+        e.stopPropagation();
+        paihangbox.style.display="block";
+    }
+    paihangbox.onclick=function(){
+        paihangbox.style.display="none";
+    }
+    document.body,onclick=function(){
+        paihangbox.style.display="none";
+    }
+
+
+    class Game{
+        constructor(bg,score,scorinner,maxscore,stateinner,paili){
+            this.bg=bg;
+            this.num=3;
+            this.life=5;
+            this.defen=0;
+            this.speed=5;
+            this.data={};
+            this.guanqia=1;
+            this.t;
+            this.height=window.innerHeight;
+            this.score=score;
+            this.scorinner=scorinner;
+            this.stateinner=stateinner;
+            this.maxscore=maxscore;
+            this.paihangbox=paihangbox;
+            this.bestscore=localStorage.bestscore?localStorage.bestscore:0;
+
+            this.bestscor=localStorage.bestscor?JSON.parse(localStorage.bestscor):[];
+        }
+        _create(){
+            var newdiv=$("<div>");
+            newdiv.classList.add("newdiv");
+            do{
+                var rn=Math.floor(Math.random()*26+65);
+                var zm=String.fromCharCode(rn);
+            }while(this.data[zm]);
+            newdiv.style.backgroundImage=`url(img/${zm}.png)`;
+            do{
+                var rleft=Math.random()*fanwei;
+            }while(this._check(rleft));
+            newdiv.style.left=rleft+"px";
+            var rtop=-Math.random()*250;
+            newdiv.style.top=rtop+"px";
+            this.bg.appendChild(newdiv);
+            this.data[zm]={left:rleft,top:rtop,ele:newdiv};
+        }
+        _move(){
+            for(let i in this.data){
+                var top=this.data[i].top;
+                top+=this.speed;
+                this.data[i].top=top;
+                this.data[i].ele.style.top=top+"px";
+                if(top>this.height){
+                    this.life--;
+                    var zhi=this.life*20+"%";
+                    lifeinner.style.backgroundSize=zhi+" 100%";
+                    if(this.life<0){
+                        this._gameover();
+                    }
+                    this.bg.removeChild(this.data[i].ele);
+                    delete this.data[i];
+                    this._create();
+                }
+            }
+        }
+        _check(left){
+            for(let i in this.data){
+                if(this.data[i].left-130<left&&left<this.data[i].left+130){
+                    return true;
+                }
+            }
+        }
+        _init(){
+            this.defen=0;
+            this.scorinner.innerHTML=this.defen;
+            this.stateinner.innerHTML=this.guanqia;
+            this.life=5;
+            lifeinner.style.backgroundSize="100% 100%";
+            for(let i in this.data){
+                this.bg.removeChild(this.data[i].ele);
+            }
+            this.data={};
+            mask.style.display="none";
+            mask2.style.display="none";
+        }
+        _keydown(){
+            document.onkeydown=function(e){
+                var keycode=e.keyCode;
+                var zm=String.fromCharCode(keycode);
+                if(this.data[zm]){
+                    this.bg.removeChild(this.data[zm].ele);
+                    delete this.data[zm];
+                    this._create();
+                    this.defen++;
+                    this.scorinner.innerHTML=this.defen;
+                    if(this.defen%10==0){
+                        this._update();
+                    }
+                }
+            } .bind(this);
+        }
+        _update(){
+            this.guanqia++;
+            this.stateinner.innerHTML=this.guanqia;
+            if(this.stateinner<=4){
+                this._create();
+            }else{
+                this.speed++;
+            }
+        }
+        _gameover(){
+            clearInterval(this.t);
+            mask.style.display="block";
+            this.score.innerHTML=this.defen;
+            if(this.defen<=localStorage.score){
+                this.maxscore.innerHTML=localStorage.score;
+            }else{
+                this.maxscore.innerHTML=this.defen;
+                localStorage.score=this.defen;
+                this.bestscore=this.defen;
+            }
+            if(this.bestscor.length<3||(this.bestscor.length>=3&&this.defen>this.bestscor[2].scor)){
+                    var player=prompt("请输入名字");
+                    this.bestscor.push({player,scor:this.defen});
+                    this.bestscor.sort(function (a,b) {
+                        if(a.scor>b.scor){
+                            return -1;
+                        }else{
+                            return 1;
+                        }
+                    });
+                    if(this.bestscor.length>3){
+                    this.bestscor.pop();
+                }
+                    localStorage.bestscor=JSON.stringify(this.bestscor);
+                }
+                if(this.bestscor.length>3){
+                    this.bestscor.pop();
+                }
+                this.bestscor.forEach(function(v,i){
+                    paili[i].innerHTML=`姓名：${v.player}  分数：${v.scor}`;
+                })
+            
+        }
+        restart(){
+            this._init();
+            this._keydown();
+            for (let i = 0; i <this.num; i++){
+                this._create();
+            };
+            this.t=setInterval(function(){
+                this._move();
+            }.bind(this),50);
+        }
+        quit(){
+            this._init();
+            show.style.display="none";
+            startbox.style.display="block";
+        }
+        choosebtns(){
+            choosebtn[1].style.boxShadow=" 0 0 5px red";
+            for (let i = 0; i < choosebtn.length; i++) {
+                choosebtn[i].onclick=function(){
+                    for(let j=0;j<choosebtn.length;j++){
+                        choosebtn[j].style.boxShadow="none";
+                    }
+                    choosebtn[i].style.boxShadow=" 0 0 5px red";
+                    if(choosebtn[i].className=="easy"){
+                        this.num=1;
+                    }else if(choosebtn[i].className=="medium"){
+                        this.num=3;
+                    }else{
+                        this.num=5;
+                    }
+                }.bind(this);
+            }
+        }
+        starts(){
+            startbox.style.display="none";
+            show.style.display="block";
+            for (let i = 0; i <this.num; i++) {
+                this._create();
+            }
+            this.t=setInterval(function(){
+                this._move();
+            }.bind(this),50);
+            this._keydown();
+            this.bestscor=localStorage.bestscor?JSON.parse(localStorage.bestscor):[];
+
+        }
+        sss(){
+            this.maxscore.innerHTML=localStorage.score;
+            if(this.bestscor.length>3){
+                    this.bestscor.pop();
+                }
+            this.bestscor.forEach(function(v,i){
+                paili[i].innerHTML=`姓名：${v.player}  分数：${v.scor}`;
+            })
+        }
+        stops(){
+            clearInterval(this.t);
+            document.onkeydown=null;
+            mask2.style.display="block";
+        }
+        continues(){
+            this.t=setInterval(function () {
+                this._move();
+            }.bind(this),50);
+            document.onkeydown=this._keydown;
+            mask2.style.display="none";
+        }
+        chooses(){
+            startbox.style.display="none";
+            difficult.style.display="block";
+        }
+        backs(){
+            startbox.style.display="block";
+            difficult.style.display="none";
+        }
+
+    }
+    var game=new Game(bg,score,scorinner,maxscore,stateinner);
+    game.sss();
+    start.onclick=function(){
+        game.starts();
+    };
+    stop.onclick=function(){
+        game.stops();
+    };
+    restart.onclick=function(){
+        game.restart();
+    };
+    quit.onclick=function(){
+        game.quit();
+    };
+    stoprestart.onclick=function(){
+        game.restart();
+    };
+    stopquit.onclick=function(){
+        game.quit();
+    };
+    continuebtn.onclick=function(){
+        game.continues();
+    };
+    choose.onclick=function(){
+        game.chooses();
+    };
+    back.onclick=function(){
+        game.backs();
+    };
+    game.choosebtns();
+
+
+
+</script>
+</html>

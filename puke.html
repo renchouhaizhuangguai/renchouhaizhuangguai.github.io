@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="font_6w59inymtqir7ldi/iconfont.css">
+    <style>
+        body,html{
+            width:100%;
+            height:100%;
+            background-image: url(img/15895809-036e4b3ebaddc499b53786793dd598f3-4.jpg);
+            background-size:contain;
+            overflow: hidden;
+        }
+        .table{
+            width:700px;
+            height:600px;
+            margin:10px auto;
+            position: relative;
+        }
+        .poke{
+            width:80px;
+            height:120px;
+            position: absolute;
+            left:0;
+            top:0;
+            border:3px solid rgba(0,0,0,0);
+            opacity: 0;
+            background-size:cover;
+            background-repeat: no-repeat;
+        }
+        .active{
+            border:3px solid red;
+        }
+        [class=nthR]{
+            width:60px;
+            height:30px;
+            position: absolute;
+            left:315px;
+            top:520px;
+            text-align: center;
+            line-height: 30px;
+            font-size:30px;
+            color: white;
+        }
+        [class=nthL]{
+            width:60px;
+            height:30px;
+            position: absolute;
+            left:315px;
+            top:560px;
+            text-align: center;
+            line-height: 30px;
+            font-size:30px;
+            color: white;
+        }
+        .iconfont{
+            font-size:30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="table">
+        <div class="nthR"><i class="iconfont ">&#xe6c7;</i></div>
+        <div class="nthL"><i class="iconfont ">&#xe6ca;</i></div>
+    </div>
+</body>
+</html>
+<script src="js/jquery-3.2.1.js"></script>
+<script>
+    $(function(){
+        let color=['c','d','h','s'];
+        let puke=[];
+        let biao={};
+        let huase,shuzi;
+        let nthR=$('.nthR');
+        let nthL=$('.nthL');
+        while(puke.length<52){
+            huase=color[Math.floor(Math.random()*4)];
+            shuzi=Math.floor(Math.random()*13+1);
+            if(!biao[huase+'_'+shuzi]){
+                biao[huase+'_'+shuzi]=true;
+                puke.push([huase,shuzi]);
+            }
+        }
+
+        let index=0;
+        for(let i=0;i<7;i++){
+            for(let j=0;j<=i;j++){
+                index++;
+                let item=puke[index];
+                console.log(item)
+                $('<div>')
+                        .addClass('poke')
+                        .css('backgroundImage',`url("img/images/${item[0]}(${item[1]}).png")`)
+                        .data('num',item[1])
+                        .delay(40*i)
+                        .animate({
+                            left:300-50*i+100*j,top:60*i,opacity: 1
+                        }).appendTo('.table').attr('id',`${i}_${j}`);
+            }
+        }
+
+        for(;index<puke.length;index++){
+            let item=puke[index];
+            $('<div>')
+                    .addClass('poke zuo')
+                    .css('backgroundImage',`url("img/images/${item[0]}(${item[1]}).png")`)
+                    .data('num',item[1])
+                    .delay(40*index)
+                    .animate({
+                        left:100,top:500,opacity: 1
+                    }).appendTo('.table');
+        }
+        let flast=null;
+        $('.poke').on('click',function(){
+            let ids=$(this).prop('id').split('_');
+            console.log(ids);
+            ids1=`#${parseInt(ids[0])+1}_${ids[1]}`;
+            ids2=`#${parseInt(ids[0])+1}_${parseInt(ids[1])+1}`;
+            if($(ids1).length==1||$(ids2).length==1){
+                return;
+            }
+            $(this).toggleClass('active');
+            if($(this).is('.active')){
+                $(this).animate({top:'-=20'})
+            }else{
+                $(this).animate({top:'+=20'})
+            }
+
+            if(!flast){
+                flast=this;
+                let num1=$(flast).data().num;
+                console.log(num1)
+                if(num1==13){
+                    $('.active').animate({top:0,left:600},function(){
+                        $(this).remove();
+                        flast=null;
+                    });
+                }
+
+            }else{
+                let num1=$(flast).data().num;
+                let num2=$(this).data().num;
+                if(num1+num2==13){
+                    $('.active').animate({top:0,left:600},function(){
+                        $(this).remove();
+                    });
+                    flast=null;
+                }else{
+                    $('.active').animate({top:'+=20'},function(){
+                        $(this).removeClass('active')
+                    })
+                    flast=null;
+                }
+
+            }
+        })
+        let z=1;
+        nthR.on('click',function(){
+            z++;
+            $('.zuo:last')
+                    .removeClass('zuo')
+                    .addClass('you')
+                    .css('zIndex',z)
+                    .animate({left:'+=400'})
+
+        })
+
+        nthL.on('click',function(){
+            let you=$('.you');
+            if(you.length==0){
+                return;
+            }
+            for(let i=you.length-1;i>=0;i--){
+                $(you[i]).delay(100*i)
+                        .removeClass('you')
+                        .addClass('zuo')
+                        .animate({left:'-=400'})
+                        .css('zIndex',0)
+            }
+        })
+        $(document).mousedown(false);
+    })
+</script>
